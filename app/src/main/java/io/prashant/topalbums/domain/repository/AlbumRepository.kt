@@ -3,6 +3,7 @@ package io.prashant.topalbums.domain.repository
 import io.prashant.topalbums.data.local.db.DatabaseService
 import io.prashant.topalbums.data.local.db.entity.AlbumEntity
 import io.prashant.topalbums.data.local.db.entity.AlbumImageEntity
+import io.prashant.topalbums.data.local.db.entity.FavoriteAlbumEntity
 import io.prashant.topalbums.data.remote.NetworkService
 import io.prashant.topalbums.data.remote.response.TopAlbumResponse
 import io.prashant.topalbums.domain.model.Album
@@ -23,6 +24,7 @@ class AlbumRepository @Inject constructor(
         private const val ALBUM_FETCH_LIMIT = 100
     }
 
+
     suspend fun getAlbums(fetchFromNetwork: Boolean = false): List<Album> {
         return if (!fetchFromNetwork && albumDao.getAlbumCount() > 0) {
             getAlbumsFromDb()
@@ -31,6 +33,18 @@ class AlbumRepository @Inject constructor(
             getAlbumsFromDb()
         }
     }
+
+    suspend fun setAlbumFavorite(albumId: String, isFavorite: Boolean) {
+        val favoriteAlbumEntity = FavoriteAlbumEntity(albumId)
+        if (isFavorite) {
+            albumDao.addAlbumInFavorite(favoriteAlbumEntity)
+        } else {
+            albumDao.removeAlbumFromFavorite(favoriteAlbumEntity)
+        }
+    }
+
+    suspend fun isFavoriteAlbum(albumId: String) = albumDao.isFavoriteAlbum(albumId) != null
+    
 
     private fun getAlbumsFromDb(): List<Album> {
         val albums = mutableListOf<Album>()

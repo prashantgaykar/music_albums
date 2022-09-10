@@ -5,5 +5,6 @@ data class Album(
     val name: String,
     val price: String,
     val artist: String,
+    val isFavorite: Boolean = false,
     val images: List<AlbumImage>
 )
