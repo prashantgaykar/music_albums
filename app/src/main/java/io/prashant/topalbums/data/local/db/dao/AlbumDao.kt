@@ -16,10 +16,10 @@ interface AlbumDao {
     suspend fun addAlbumImages(albumImages: List<AlbumImageEntity>)
 
     @Query(
-        "SELECT * FROM album" +
-                " LEFT JOIN album_image ON album.id = album_image.album_id"
+        "SELECT album.id,album.name,album.artist,album.price,album_image.album_id,album_image.url,album_image.height FROM album" +
+                " LEFT JOIN album_image ON album.id = album_image.album_id WHERE name LIKE :searchByAlbumName || '%'"
     )
-    fun getAlbums(): Map<AlbumEntity, List<AlbumImageEntity>>
+    suspend fun getAlbums(searchByAlbumName: String): Map<AlbumEntity, List<AlbumImageEntity>>
 
     @Query("SELECT count(id) FROM album")
     suspend fun getAlbumCount(): Int

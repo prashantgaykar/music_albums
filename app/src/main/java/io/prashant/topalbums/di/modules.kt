@@ -2,15 +2,19 @@ package io.prashant.topalbums.di
 
 import android.content.Context
 import androidx.room.Room
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.prashant.topalbums.data.local.db.DatabaseService
 import io.prashant.topalbums.data.remote.ApiHelper
 import io.prashant.topalbums.data.remote.NetworkService
 import io.prashant.topalbums.data.remote.Networking
+import io.prashant.topalbums.domain.repository.AlbumRepository
+import io.prashant.topalbums.domain.repository.AlbumRepositoryImpl
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -39,5 +43,11 @@ class ApplicationModule() {
             .build()
     }
 
+    @Module
+    @InstallIn(ViewModelComponent::class)
+    interface RepositoryModule {
+        @Binds
+        fun bindAlbumRepository(albumRepository: AlbumRepositoryImpl): AlbumRepository
+    }
 
 }
